@@ -13,27 +13,32 @@ public class LibraryApp {
             System.out.println("2. Search Book");
             System.out.println("3. Remove Book");
             System.out.println("4. Show All Books");
-            System.out.println("5. Exit");
+            System.out.println("5. Edit");
+            System.out.println("6. Exit");
             System.out.print("Choose option: ");
             int choice=sc.nextInt();
             sc.nextLine();
             if(choice==1){
-                Book b=new Book();
                 System.out.print("Enter Book ID: ");
-                b.id = sc.nextLine();
+                String id = sc.nextLine();
 
                 System.out.print("Enter Title: ");
-                b.title = sc.nextLine();
+                String title = sc.nextLine();
 
                 System.out.print("Enter Author: ");
-                b.author = sc.nextLine();
+                if(service.exists(id)){
+                    System.out.println("Book already exists");
+                    continue;
+                }
+                String author = sc.nextLine();
+                Book b=new Book(id,title,author);
                 service.addBook(b);
             } else if (choice==2) {
                 System.out.print("Enter The Book ID U Want To Search: ");
                 String id=sc.nextLine();
                 Book result= service.searchbook(id);
                 if(result!=null){
-                    System.out.println("Found: " + result.title + " by " + result.author);
+                    System.out.println("Found: " + result.getTitle() + " by " + result.getAuthor());
                 }else {
                     System.out.println("Book not found");
                 }
@@ -42,7 +47,7 @@ public class LibraryApp {
                 String id = sc.nextLine();
                 Book rem= service.removebook(id);
                 if (rem != null) {
-                    System.out.println("Removed: " + rem.title);
+                    System.out.println("Removed: " + rem.getTitle());
                 } else {
                     System.out.println("Book not found");
                 }
@@ -52,12 +57,40 @@ public class LibraryApp {
                 ArrayList<Book> list = service.getAllBooks();
 
                 for (Book b : list) {
-                    System.out.println(b.id + " - " + b.title + " - " + b.author);
+                    System.out.println(b);
                 }
-            } else if (choice==5) {
+            } else if (choice==6) {
                 System.out.println("Exiting...");
                 break;
-            }else {
+            } else if (choice==5) {
+                System.out.println("Enter the book id u want to edit");
+                String id= sc.nextLine();
+                Book result=service.searchbook(id);
+                if(result==null){
+                    System.out.println("Book Not Found");
+                    continue;
+                }
+                System.out.println("What do you want to update?");
+                System.out.println("1. Title");
+                System.out.println("2. Author");
+                int opt=sc.nextInt();
+                sc.nextLine();
+                if (opt == 1) {
+                    System.out.print("Enter new Title: ");
+                    String newTitle = sc.nextLine();
+                    service.update(id, newTitle);
+                    System.out.println("Title updated!");
+                }
+                else if (opt == 2) {
+                    System.out.print("Enter new Author: ");
+                    String newAuthor = sc.nextLine();
+                    service.updateauthor(id, newAuthor);
+                    System.out.println("Author updated!");
+                }
+                else {
+                    System.out.println("Invalid option.");
+                }
+            } else {
                 System.out.println("Invalid choice. Try again.");
             }
         }
