@@ -6,6 +6,7 @@ import java.util.*;
 public class LibraryApp {
     public static void main(String[] args){
         LibraryService service=new LibraryService();
+        service.loadfromfile();
         Scanner sc=new Scanner(System.in);
         while (true){
             System.out.println("\n--- Library Menu ---");
@@ -14,7 +15,8 @@ public class LibraryApp {
             System.out.println("3. Remove Book");
             System.out.println("4. Show All Books");
             System.out.println("5. Edit");
-            System.out.println("6. Exit");
+            System.out.println("6.Search books by author");
+            System.out.println("7. Exit");
             System.out.print("Choose option: ");
             int choice=sc.nextInt();
             sc.nextLine();
@@ -59,7 +61,7 @@ public class LibraryApp {
                 for (Book b : list) {
                     System.out.println(b);
                 }
-            } else if (choice==6) {
+            } else if (choice==7) {
                 System.out.println("Exiting...");
                 break;
             } else if (choice==5) {
@@ -90,6 +92,19 @@ public class LibraryApp {
                 else {
                     System.out.println("Invalid option.");
                 }
+            } else if (choice==6) {
+                System.out.println("Enter author name");
+                String keyword=sc.nextLine();
+                ArrayList<Book> found=service.searchbyAuthor(keyword);
+                if(found.isEmpty()){
+                    System.out.println("NO books found for this author");
+                }else{
+                    System.out.println("Books by matching author");
+                    for(Book b:found){
+                        System.out.println(b);
+                    }
+                }
+
             } else {
                 System.out.println("Invalid choice. Try again.");
             }
